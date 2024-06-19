@@ -2,7 +2,7 @@ import pandas as pd
 from typing import Dict, List
 from datetime import datetime
 import requests
-from dotenv import load_dotenv
+
 
 
 def get_data_from_xlsx(path: str) -> List[Dict]:
