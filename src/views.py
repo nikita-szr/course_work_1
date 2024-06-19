@@ -57,7 +57,7 @@ def get_cards_data(transactions):
         if card_number not in card_data:
             card_data[card_number] = {'total_spent': 0.0, 'cashback': 0.0}
         if amount < 0:
-            card_data[card_number]['total_spent'] += amount
+            card_data[card_number]['total_spent'] += abs(amount)
             cashback_value = transaction.get("Кэшбэк")
             # рассчитываем кэшбек как 1% от траты, но если поле кешбек содержит сумму просто ее добавляем
             if cashback_value is not None:
