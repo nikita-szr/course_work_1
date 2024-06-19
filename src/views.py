@@ -1,10 +1,9 @@
-import os
-
 import pandas as pd
 from typing import Dict, List
 from datetime import datetime
 import requests
 from dotenv import load_dotenv
+
 
 def get_data_from_xlsx(path: str) -> List[Dict]:
     """Функция принимает путь до xlsx файла и создает список словарей с транзакциями"""
@@ -92,20 +91,53 @@ def get_top_5_transactions(transactions):
 
 
 load_dotenv()
-api_key = os.getenv("API_KEY_CURRENCY")
 
 
-def get_exchange_rates(currencies): # не забыть что функция принимает список ["USD", "EUR"]
-    """Функция принимает список кодов валют и возвращает стоимость рубля к переданной валюте"""
-    exchange_rates = {}
+def get_exchange_rates(currencies, api_key_currency):  # не забыть что функция принимает список ["USD", "EUR"]
+    """Функция принимает список кодов валют и возвращает список словарей с валютами и их курсами"""
+    exchange_rates = []
     for currency in currencies:
-        url = f'https://v6.exchangerate-api.com/v6/{api_key}/latest/{currency}'
+        url = f'https://v6.exchangerate-api.com/v6/{api_key_currency}/latest/{currency}'
         response = requests.get(url)
         if response.status_code == 200:
             data = response.json()
             ruble_cost = data["conversion_rates"]["RUB"]
-            exchange_rates[currency] = ruble_cost
+            exchange_rates.append({
+                "currency": currency,
+                "rate": ruble_cost})
         else:
             print(f"Ошибка: {response.status_code}, {response.text}")
-            return None
+            exchange_rates.append({
+                "currency": currency,
+                "rate": None
+            })
     return exchange_rates
+
+
+def get_stocks_cost(companies, api_key_stocks):  # не забыть что функция принимает список ["AAPL", "AMZN", "GOOGL"]
+    """Функция принимает список кодов компаний и возвращает словарь со стоимостью акций каждой переданной компании"""
+    stocks_cost = []
+    for company in companies:
+        url = f'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={company}&apikey={api_key_stocks}'
+        response = requests.get(url)
+        if response.status_code == 200:
+            data = response.json()
+            time_series = data.get("Time Series (Daily)")
+            if time_series:
+                latest_date = max(time_series.keys())
+                latest_data = time_series[latest_date]
+                stock_cost = latest_data["4. close"]
+                stocks_cost.append({
+                    "stock": company,
+                    "price": float(stock_cost)})
+            else:
+                print(f"Ошибка: данные для компании {company} недоступны.")
+                stocks_cost.append({
+                    "stock": company,
+                    "price": None})
+        else:
+            print(f"Ошибка: {response.status_code}, {response.text}")
+            stocks_cost.append({
+                "stock": company,
+                "price": None})
+    return stocks_cost
