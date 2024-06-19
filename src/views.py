@@ -82,16 +82,14 @@ def get_top_5_transactions(transactions):
     sorted_transactions = sorted(transactions, key=lambda x: float(x["Сумма операции"]), reverse=True)
     top_5_sorted_transactions = []
     for transaction in sorted_transactions[:5]:
+        date = datetime.strptime(transaction["Дата операции"], '%d.%m.%Y %H:%M:%S').strftime('%d.%m.%Y')
         top_5_sorted_transactions.append({
-            "date": transaction["Дата операции"],
+            "date": date,
             "amount": transaction["Сумма операции"],
             "category": transaction["Категория"],
             "description": transaction["Описание"]
         })
     return top_5_sorted_transactions
-
-
-load_dotenv()
 
 
 def get_exchange_rates(currencies, api_key_currency):  # не забыть что функция принимает список ["USD", "EUR"]
