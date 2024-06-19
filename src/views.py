@@ -15,10 +15,11 @@ def get_data_from_xlsx(path: str) -> List[Dict]:
         return []
 
 
-def filter_transactions_by_date(transactions):
-    """Функция принимает список словарей с транзакциями и фильтрует по дате
-    от начала текущего месяца по сегодняшний день"""
-    end_date = datetime.now()
+def filter_transactions_by_date(transactions, input_date_str): # дата формата дд.мм.гггг.
+    """Функция принимает список словарей с транзакциями и дату
+    фильтрует транзакции с начала месяца, на который выпадает входящая дата по входящую дату."""
+    input_date = datetime.strptime(input_date_str, '%d.%m.%Y')
+    end_date = input_date
     start_date = datetime(end_date.year, end_date.month, 1)
 
     def parse_date(date_str):
