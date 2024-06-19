@@ -33,5 +33,6 @@ def main(input_date, user_settings, api_key_currency, api_key_stocks):
 
     return json.dumps(user_data, ensure_ascii=False, indent=4)
 
+
 result = main("20.05.2020", user_choice, api_key_currency, api_key_stocks)
 print(result)
