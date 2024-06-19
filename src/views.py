@@ -1,7 +1,10 @@
+import os
+
 import pandas as pd
 from typing import Dict, List
 from datetime import datetime
-
+import requests
+from dotenv import load_dotenv
 
 def get_data_from_xlsx(path: str) -> List[Dict]:
     """Функция принимает путь до xlsx файла и создает список словарей с транзакциями"""
@@ -88,3 +91,21 @@ def get_top_5_transactions(transactions):
     return top_5_sorted_transactions
 
 
+load_dotenv()
+api_key = os.getenv("API_KEY_CURRENCY")
+
+
+def get_exchange_rates(currencies): # не забыть что функция принимает список ["USD", "EUR"]
+    """Функция принимает список кодов валют и возвращает стоимость рубля к переданной валюте"""
+    exchange_rates = {}
+    for currency in currencies:
+        url = f'https://v6.exchangerate-api.com/v6/{api_key}/latest/{currency}'
+        response = requests.get(url)
+        if response.status_code == 200:
+            data = response.json()
+            ruble_cost = data["conversion_rates"]["RUB"]
+            exchange_rates[currency] = ruble_cost
+        else:
+            print(f"Ошибка: {response.status_code}, {response.text}")
+            return None
+    return exchange_rates
