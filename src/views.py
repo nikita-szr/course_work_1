@@ -72,3 +72,19 @@ def get_cards_data(transactions):
             "total_spent": round(data['total_spent'], 2),
             "cashback": round(data['cashback'], 2)})
     return cards_data
+
+
+def get_top_5_transactions(transactions):
+    """Функция принимает список транзакций и выводит топ 5 операций по сумме платежа"""
+    sorted_transactions = sorted(transactions, key=lambda x: float(x["Сумма операции"]), reverse=True)
+    top_5_sorted_transactions = []
+    for transaction in sorted_transactions[:5]:
+        top_5_sorted_transactions.append({
+            "date": transaction["Дата операции"],
+            "amount": transaction["Сумма операции"],
+            "category": transaction["Категория"],
+            "description": transaction["Описание"]
+        })
+    return top_5_sorted_transactions
+
+
