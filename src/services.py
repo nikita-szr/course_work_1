@@ -1,13 +1,12 @@
-
 import json
 from typing import List, Dict
 from datetime import datetime
 
 
-def analyze_cashback(data: List[Dict], year: int, month: int) -> json:
+def analyze_cashback(transactions: List[Dict], year: int, month: int) -> json:
     """Принимает список словарей транзакций и считает сумму кэшбека по категориям"""
     cashback_analysis = {}
-    for transaction in data:
+    for transaction in transactions:
         transaction_date = datetime.strptime(transaction["Дата операции"], '%d.%m.%Y %H:%M:%S')
         if transaction_date.year == year and transaction_date.month == month:
             category = transaction["Категория"]
@@ -24,3 +23,19 @@ def analyze_cashback(data: List[Dict], year: int, month: int) -> json:
                     cashback_analysis[category] = cashback
     return json.dumps(cashback_analysis, ensure_ascii=False, indent=4)
 
+
+def investment_bank(transactions: List[Dict], date: str, limit: int) -> int: # принимает строку с датой формата гггг.мм
+    """Функция принимает транзакции, дату и лимит округления и считает сколько можно было отложить в инвесткопилку"""
+    sum_investment_bank = 0
+    user_date = datetime.strptime(date, '%Y.%m')
+    for transaction in transactions:
+        transaction_date = datetime.strptime(transaction["Дата операции"], '%d.%m.%Y %H:%M:%S')
+        if transaction_date.year == user_date.year and transaction_date.month == user_date.month:
+            amount = transaction["Сумма операции"]
+            if amount < 0 and transaction["Категория"] != "Переводы" and transaction["Категория"] != "Наличные":
+                division = amount / limit
+                rounded_division = int(division)
+                total_amount = rounded_division * limit
+                investment = total_amount - amount
+                sum_investment_bank += investment
+    return sum_investment_bank
