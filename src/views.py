@@ -83,7 +83,7 @@ def get_cards_data(transactions: List[Dict]) -> List[Dict]:
                 else:
                     card_data[card_number]['cashback'] += amount * -0.01
             else:
-                card_data[card_number]['cashback'] += amount * 0.01
+                card_data[card_number]['cashback'] += amount * -0.01
     logger.info('кэшбек и суммы по картам посчитаны')
     cards_data = []
     for last_digits, data in card_data.items():
