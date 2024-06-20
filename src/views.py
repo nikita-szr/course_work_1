@@ -2,20 +2,30 @@ import pandas as pd
 from typing import Dict, List
 from datetime import datetime
 import requests
+import logging
 
+logger = logging.getLogger("views")
+logger.setLevel(logging.DEBUG)
+file_handler = logging.FileHandler(r'../logs/views.log', mode='w')
+file_handler.setLevel(logging.DEBUG)
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+file_handler.setFormatter(formatter)
+logger.addHandler(file_handler)
 
 
 def get_data_from_xlsx(path: str) -> List[Dict]:
     """Функция принимает путь до xlsx файла и создает список словарей с транзакциями"""
     try:
         df = pd.read_excel(path)
+        logger.info(f'файл перекодирован в список словарей')
         return df.to_dict(orient='records')
     except Exception as e:
         print(f'Возникла ошибка {e}')
+        logger.error(f'Возникла ошибка {e}')
         return []
 
 
-def filter_transactions_by_date(transactions, input_date_str): # дата формата дд.мм.гггг.
+def filter_transactions_by_date(transactions, input_date_str):  # дата формата дд.мм.гггг.
     """Функция принимает список словарей с транзакциями и дату
     фильтрует транзакции с начала месяца, на который выпадает входящая дата по входящую дату."""
     input_date = datetime.strptime(input_date_str, '%d.%m.%Y')
@@ -28,6 +38,7 @@ def filter_transactions_by_date(transactions, input_date_str): # дата фор
 
     filtered_transactions = [transaction for transaction in transactions
                              if start_date <= parse_date(transaction["Дата операции"]) <= end_date]
+    logger.info(f'Транзакции в списке отфильтрованы по датам от {start_date} до {end_date}')
     return filtered_transactions
 
 
@@ -36,12 +47,16 @@ def greeting():
     now = datetime.now()
     current_hour = now.hour
     if 6 <= current_hour < 12:
+        logger.info(f'Приветствие утра выполнено')
         return "Доброе утро"
     elif 12 <= current_hour < 18:
+        logger.info(f'Приветствие дня выполнено')
         return "Добрый день"
     elif 18 <= current_hour < 23:
+        logger.info(f'Приветствие вечера выполнено')
         return "Добрый вечер"
     else:
+        logger.info(f'Приветствие ночи выполнено')
         return "Доброй ночи"
 
 
@@ -68,18 +83,20 @@ def get_cards_data(transactions):
                     card_data[card_number]['cashback'] += amount * -0.01
             else:
                 card_data[card_number]['cashback'] += amount * 0.01
+    logger.info(f'кэшбек и суммы по картам посчитаны')
     cards_data = []
     for last_digits, data in card_data.items():
         cards_data.append({
             "last_digits": last_digits,
             "total_spent": round(data['total_spent'], 2),
             "cashback": round(data['cashback'], 2)})
+    logger.info(f'получен словарь по тратам и кешбеку по каждой карте')
     return cards_data
 
 
 def get_top_5_transactions(transactions):
     """Функция принимает список транзакций и выводит топ 5 операций по сумме платежа"""
-    sorted_transactions = sorted(transactions, key=lambda x: float(x["Сумма операции"]), reverse=True)
+    sorted_transactions = sorted(transactions, key=lambda x: abs(float(x["Сумма операции"])), reverse=True)
     top_5_sorted_transactions = []
     for transaction in sorted_transactions[:5]:
         date = datetime.strptime(transaction["Дата операции"], '%d.%m.%Y %H:%M:%S').strftime('%d.%m.%Y')
@@ -89,6 +106,7 @@ def get_top_5_transactions(transactions):
             "category": transaction["Категория"],
             "description": transaction["Описание"]
         })
+    logger.info(f'Выделено топ 5 больших транзакций')
     return top_5_sorted_transactions
 
 
@@ -98,18 +116,22 @@ def get_exchange_rates(currencies, api_key_currency):  # не забыть чт�
     for currency in currencies:
         url = f'https://v6.exchangerate-api.com/v6/{api_key_currency}/latest/{currency}'
         response = requests.get(url)
+        logger.info(f'Выполнен запрос на курс валют')
         if response.status_code == 200:
             data = response.json()
+            logger.info(f'Получен ответ от api курса валют: {data}')
             ruble_cost = data["conversion_rates"]["RUB"]
             exchange_rates.append({
                 "currency": currency,
                 "rate": ruble_cost})
         else:
             print(f"Ошибка: {response.status_code}, {response.text}")
+            logger.error(f'Ошибка api запроса {response.status_code}, {response.text}')
             exchange_rates.append({
                 "currency": currency,
                 "rate": None
             })
+    logger.info(f'Курсы валют созданы')
     return exchange_rates
 
 
@@ -119,8 +141,10 @@ def get_stocks_cost(companies, api_key_stocks):  # не забыть что фу
     for company in companies:
         url = f'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={company}&apikey={api_key_stocks}'
         response = requests.get(url)
+        logger.info(f'Выполнен запрос на курс акций')
         if response.status_code == 200:
             data = response.json()
+            logger.info(f'Получен ответ от api курса акций: {data}')
             time_series = data.get("Time Series (Daily)")
             if time_series:
                 latest_date = max(time_series.keys())
@@ -130,13 +154,16 @@ def get_stocks_cost(companies, api_key_stocks):  # не забыть что фу
                     "stock": company,
                     "price": float(stock_cost)})
             else:
-                print(f"Ошибка: данные для компании {company} недоступны.")
+                print(f"Ошибка: данные для компании {company} недоступны. API ответ {data}")
+                logger.error(f'Ошибка ответа: {data}')
                 stocks_cost.append({
                     "stock": company,
                     "price": None})
         else:
             print(f"Ошибка: {response.status_code}, {response.text}")
+            logger.error(f'Ошибка api запроса {response.status_code}, {response.text}')
             stocks_cost.append({
                 "stock": company,
                 "price": None})
+    logger.info(f'Стоимость акций создана')
     return stocks_cost

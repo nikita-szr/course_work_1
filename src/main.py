@@ -16,6 +16,7 @@ input_date_str = "20.05.2020"
 
 def main(input_date, user_settings, api_key_currency, api_key_stocks):
     """Основная функция для генерации JSON-ответа."""
+    path = r'../data/operations.xls'
     transactions = get_data_from_xlsx(r'../data/operations.xls')
     filtered_transactions = filter_transactions_by_date(transactions, input_date)
     cards_data = get_cards_data(filtered_transactions)
