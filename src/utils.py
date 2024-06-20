@@ -75,15 +75,17 @@ def get_cards_data(transactions: List[Dict]) -> List[Dict]:
         if amount < 0:
             card_data[card_number]['total_spent'] += abs(amount)
             cashback_value = transaction.get("Кэшбэк")
-            # рассчитываем кэшбек как 1% от траты, но если поле кешбек содержит сумму просто ее добавляем
-            if cashback_value is not None:
-                cashback_amount = float(cashback_value)
-                if cashback_amount >= 0:
-                    card_data[card_number]['cashback'] += cashback_amount
+            # убираем категории переводы и наличные т.к. с них кэшбека не будет
+            if transaction["Категория"] != "Переводы" and transaction["Категория"] != "Наличные":
+                # рассчитываем кэшбек как 1% от траты, но если поле кешбек содержит сумму просто ее добавляем
+                if cashback_value is not None:
+                    cashback_amount = float(cashback_value)
+                    if cashback_amount >= 0:
+                        card_data[card_number]['cashback'] += cashback_amount
+                    else:
+                        card_data[card_number]['cashback'] += amount * -0.01
                 else:
                     card_data[card_number]['cashback'] += amount * -0.01
-            else:
-                card_data[card_number]['cashback'] += amount * -0.01
     logger.info('кэшбек и суммы по картам посчитаны')
     cards_data = []
     for last_digits, data in card_data.items():
