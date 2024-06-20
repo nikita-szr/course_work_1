@@ -1,6 +1,7 @@
 import json
 from typing import List, Dict
 from datetime import datetime
+import re
 
 
 def analyze_cashback(transactions: List[Dict], year: int, month: int) -> json:
@@ -51,4 +52,14 @@ def search_transactions_by_user_choice(transactions: List[Dict], search: str) ->
             search_result.append(transaction)
     return json.dumps(search_result, ensure_ascii=False, indent=4)
 
+
+def search_transaction_by_mobile_phone(transactions: List[Dict]) -> json:
+    """Функция возвращает транзакции в описании которых есть мобильный номер"""
+    mobile_pattern = re.compile(r'\+\d{1,4}')
+    found_transactions = []
+    for transaction in transactions:
+        description = transaction.get('Описание', '')
+        if mobile_pattern.search(description):
+            found_transactions.append(transaction)
+    return json.dumps(found_transactions, ensure_ascii=False, indent=4)
 
