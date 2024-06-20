@@ -39,3 +39,16 @@ def investment_bank(transactions: List[Dict], date: str, limit: int) -> int: # �
                 investment = total_amount - amount
                 sum_investment_bank += investment
     return sum_investment_bank
+
+
+def search_transactions_by_user_choice(transactions: List[Dict], search: str) -> json:
+    """Функция выполняет поиск в транзакциях по переданной строке """
+    search_result = []
+    for transaction in transactions:
+        category = str(transaction.get('Категория', ''))
+        description = str(transaction.get('Описание', ''))
+        if search.lower() in description.lower() or search.lower() in category.lower():
+            search_result.append(transaction)
+    return json.dumps(search_result, ensure_ascii=False, indent=4)
+
+
