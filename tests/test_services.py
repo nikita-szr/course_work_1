@@ -1,10 +1,10 @@
-from src.services import analyze_cashback, investment_bank, search_transactions_by_user_choice, \
-    search_transaction_by_mobile_phone, find_person_to_person_transactions
-import pytest
-import unittest
-from datetime import datetime
 import json
-from typing import List, Dict
+
+import pytest
+
+from src.services import (analyze_cashback, find_person_to_person_transactions,
+                          investment_bank, search_transaction_by_mobile_phone,
+                          search_transactions_by_user_choice)
 
 
 @pytest.mark.parametrize("transactions, year, month, expected_output", [

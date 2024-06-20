@@ -4,9 +4,9 @@ from datetime import datetime
 from typing import Dict, List
 
 
-def analyze_cashback(transactions: List[Dict], year: int, month: int) -> json:
+def analyze_cashback(transactions: List[Dict], year: int, month: int) -> str:
     """Принимает список словарей транзакций и считает сумму кэшбека по категориям"""
-    cashback_analysis = {}
+    cashback_analysis: Dict = {}
     for transaction in transactions:
         transaction_date = datetime.strptime(transaction["Дата операции"], '%d.%m.%Y %H:%M:%S')
         if transaction_date.year == year and transaction_date.month == month:
@@ -34,13 +34,13 @@ def investment_bank(transactions: List[Dict], date: str, limit: int) -> int:  # 
         if transaction_date.year == user_date.year and transaction_date.month == user_date.month:
             amount = transaction["Сумма операции"]
             if amount < 0 and transaction["Категория"] != "Переводы" and transaction["Категория"] != "Наличные":
-                amount_ = abs(amount) # перевел в положительное
+                amount_ = abs(amount)  # перевел в положительное
                 total_amount = ((amount_ + limit + 1) // limit) * limit - amount_
                 sum_investment_bank += total_amount
     return sum_investment_bank
 
 
-def search_transactions_by_user_choice(transactions: List[Dict], search: str) -> json:
+def search_transactions_by_user_choice(transactions: List[Dict], search: str) -> str:
     """Функция выполняет поиск в транзакциях по переданной строке """
     search_result = []
     for transaction in transactions:
@@ -51,7 +51,7 @@ def search_transactions_by_user_choice(transactions: List[Dict], search: str) ->
     return json.dumps(search_result, ensure_ascii=False, indent=4)
 
 
-def search_transaction_by_mobile_phone(transactions: List[Dict]) -> json:
+def search_transaction_by_mobile_phone(transactions: List[Dict]) -> str:
     """Функция возвращает транзакции в описании которых есть мобильный номер"""
     mobile_pattern = re.compile(r'\+\d{1,4}')
     found_transactions = []
@@ -62,7 +62,7 @@ def search_transaction_by_mobile_phone(transactions: List[Dict]) -> json:
     return json.dumps(found_transactions, ensure_ascii=False, indent=4)
 
 
-def find_person_to_person_transactions(transactions: List[Dict]) -> json:
+def find_person_to_person_transactions(transactions: List[Dict]) -> str:
     """Функция вовзращает транзакции в описании которых есть имя кому или от кого выполнен перевод"""
     transfer_transactions = []
     search_pattern = re.compile(r'\b[А-ЯЁ][а-яё]*\s[А-ЯЁ]\.')
