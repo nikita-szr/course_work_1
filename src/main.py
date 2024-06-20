@@ -11,13 +11,13 @@ user_choice = {
 load_dotenv()
 api_key_currency = os.getenv("API_KEY_CURRENCY")
 api_key_stocks = os.getenv("API_KEY_STOCKS")
-input_date_str = "20.05.2020"
+input_date_str = "20.03.2020"
 
 
 def main(input_date, user_settings, api_key_currency, api_key_stocks):
     """Основная функция для генерации JSON-ответа."""
     path = r'../data/operations.xls'
-    transactions = get_data_from_xlsx(r'../data/operations.xls')
+    transactions = get_data_from_xlsx(path)
     filtered_transactions = filter_transactions_by_date(transactions, input_date)
     cards_data = get_cards_data(filtered_transactions)
     exchange_rates = get_exchange_rates(user_settings["user_currencies"], api_key_currency)
@@ -35,5 +35,5 @@ def main(input_date, user_settings, api_key_currency, api_key_stocks):
     return json.dumps(user_data, ensure_ascii=False, indent=4)
 
 
-result = main("20.05.2020", user_choice, api_key_currency, api_key_stocks)
+result = main(input_date_str, user_choice, api_key_currency, api_key_stocks)
 print(result)
