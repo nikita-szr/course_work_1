@@ -14,8 +14,8 @@ def analyze_cashback(transactions: List[Dict], year: int, month: int) -> json:
             amount = transaction["Сумма операции"]
             if amount < 0:
                 cashback_value = transaction["Кэшбэк"]
-                if cashback_value >= 0:
-                    cashback = cashback_value
+                if cashback_value is not None and cashback_value >= 0:
+                    cashback = float(cashback_value)
                 else:
                     cashback = round(amount * -0.01, 5)
                 if category in cashback_analysis:
@@ -24,6 +24,14 @@ def analyze_cashback(transactions: List[Dict], year: int, month: int) -> json:
                     cashback_analysis[category] = cashback
     return json.dumps(cashback_analysis, ensure_ascii=False, indent=4)
 
+data = [
+        {"Дата операции": "15.05.2023 12:34:56", "Категория": "Продукты", "Сумма операции": -1000, "Кэшбэк": 10},
+        {"Дата операции": "15.05.2023 12:34:56", "Категория": "Продукты", "Сумма операции": -2000, "Кэшбэк": None},
+        {"Дата операции": "15.05.2023 12:34:56", "Категория": "Развлечения", "Сумма операции": -500, "Кэшбэк": 5},
+        {"Дата операции": "15.04.2023 12:34:56", "Категория": "Продукты", "Сумма операции": -1000, "Кэшбэк": 10},
+    ]
+result = analyze_cashback(data, 2023, 5)
+print(result)
 
 def investment_bank(transactions: List[Dict], date: str, limit: int) -> int:  # принимает строку с датой гггг.мм
     """Функция принимает транзакции, дату и лимит округления и считает сколько можно было отложить в инвесткопилку"""
