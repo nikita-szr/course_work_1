@@ -1,8 +1,9 @@
-import pandas as pd
-from typing import Dict, List
-from datetime import datetime
-import requests
 import logging
+from datetime import datetime
+from typing import Dict, List
+
+import pandas as pd
+import requests
 
 logger = logging.getLogger("views")
 logger.setLevel(logging.DEBUG)
@@ -17,7 +18,7 @@ def get_data_from_xlsx(path: str) -> List[Dict]:
     """Функция принимает путь до xlsx файла и создает список словарей с транзакциями"""
     try:
         df = pd.read_excel(path)
-        logger.info(f'файл перекодирован в список словарей')
+        logger.info('файл перекодирован в список словарей')
         return df.to_dict(orient='records')
     except Exception as e:
         print(f'Возникла ошибка {e}')
@@ -25,14 +26,14 @@ def get_data_from_xlsx(path: str) -> List[Dict]:
         return []
 
 
-def filter_transactions_by_date(transactions, input_date_str):  # дата формата дд.мм.гггг.
+def filter_transactions_by_date(transactions: List[Dict], input_date_str: str) -> List[Dict]:  # дата формата дд.мм.гггг
     """Функция принимает список словарей с транзакциями и дату
     фильтрует транзакции с начала месяца, на который выпадает входящая дата по входящую дату."""
     input_date = datetime.strptime(input_date_str, '%d.%m.%Y')
     end_date = input_date
     start_date = datetime(end_date.year, end_date.month, 1)
 
-    def parse_date(date_str):
+    def parse_date(date_str: str):
         """Функция переводит дату из формата строки в формат datetime"""
         return datetime.strptime(date_str, '%d.%m.%Y %H:%M:%S')
 
@@ -47,20 +48,20 @@ def greeting():
     now = datetime.now()
     current_hour = now.hour
     if 6 <= current_hour < 12:
-        logger.info(f'Приветствие утра выполнено')
+        logger.info('Приветствие утра выполнено')
         return "Доброе утро"
     elif 12 <= current_hour < 18:
-        logger.info(f'Приветствие дня выполнено')
+        logger.info('Приветствие дня выполнено')
         return "Добрый день"
     elif 18 <= current_hour < 23:
-        logger.info(f'Приветствие вечера выполнено')
+        logger.info('Приветствие вечера выполнено')
         return "Добрый вечер"
     else:
-        logger.info(f'Приветствие ночи выполнено')
+        logger.info('Приветствие ночи выполнено')
         return "Доброй ночи"
 
 
-def get_cards_data(transactions):
+def get_cards_data(transactions: List[Dict]) -> List[Dict]:
     """Функция создает словарь с ключоми номеров карт и в значения добавляет сумму трат и сумму кэшбека"""
     card_data = {}
     for transaction in transactions:
@@ -83,18 +84,18 @@ def get_cards_data(transactions):
                     card_data[card_number]['cashback'] += amount * -0.01
             else:
                 card_data[card_number]['cashback'] += amount * 0.01
-    logger.info(f'кэшбек и суммы по картам посчитаны')
+    logger.info('кэшбек и суммы по картам посчитаны')
     cards_data = []
     for last_digits, data in card_data.items():
         cards_data.append({
             "last_digits": last_digits,
             "total_spent": round(data['total_spent'], 2),
             "cashback": round(data['cashback'], 2)})
-    logger.info(f'получен словарь по тратам и кешбеку по каждой карте')
+    logger.info('получен словарь по тратам и кешбеку по каждой карте')
     return cards_data
 
 
-def get_top_5_transactions(transactions):
+def get_top_5_transactions(transactions: List[Dict]) -> List[Dict]:
     """Функция принимает список транзакций и выводит топ 5 операций по сумме платежа"""
     sorted_transactions = sorted(transactions, key=lambda x: abs(float(x["Сумма операции"])), reverse=True)
     top_5_sorted_transactions = []
@@ -106,17 +107,18 @@ def get_top_5_transactions(transactions):
             "category": transaction["Категория"],
             "description": transaction["Описание"]
         })
-    logger.info(f'Выделено топ 5 больших транзакций')
+    logger.info('Выделено топ 5 больших транзакций')
     return top_5_sorted_transactions
 
 
-def get_exchange_rates(currencies, api_key_currency):  # не забыть что функция принимает список ["USD", "EUR"]
+# не забыть что функция принимает список ["USD", "EUR"]
+def get_exchange_rates(currencies: List[str], api_key_currency) -> List[Dict]:
     """Функция принимает список кодов валют и возвращает список словарей с валютами и их курсами"""
     exchange_rates = []
     for currency in currencies:
         url = f'https://v6.exchangerate-api.com/v6/{api_key_currency}/latest/{currency}'
         response = requests.get(url)
-        logger.info(f'Выполнен запрос на курс валют')
+        logger.info('Выполнен запрос на курс валют')
         if response.status_code == 200:
             data = response.json()
             logger.info(f'Получен ответ от api курса валют: {data}')
@@ -131,17 +133,18 @@ def get_exchange_rates(currencies, api_key_currency):  # не забыть чт�
                 "currency": currency,
                 "rate": None
             })
-    logger.info(f'Курсы валют созданы')
+    logger.info('Курсы валют созданы')
     return exchange_rates
 
 
-def get_stocks_cost(companies, api_key_stocks):  # не забыть что функция принимает список ["AAPL", "AMZN", "GOOGL"]
+# не забыть что функция принимает список ["AAPL", "AMZN", "GOOGL"]
+def get_stocks_cost(companies: List[str], api_key_stocks) -> List[Dict]:
     """Функция принимает список кодов компаний и возвращает словарь со стоимостью акций каждой переданной компании"""
     stocks_cost = []
     for company in companies:
         url = f'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={company}&apikey={api_key_stocks}'
         response = requests.get(url)
-        logger.info(f'Выполнен запрос на курс акций')
+        logger.info('Выполнен запрос на курс акций')
         if response.status_code == 200:
             data = response.json()
             logger.info(f'Получен ответ от api курса акций: {data}')
@@ -165,5 +168,5 @@ def get_stocks_cost(companies, api_key_stocks):  # не забыть что фу
             stocks_cost.append({
                 "stock": company,
                 "price": None})
-    logger.info(f'Стоимость акций создана')
+    logger.info('Стоимость акций создана')
     return stocks_cost

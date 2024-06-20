@@ -1,8 +1,11 @@
-import os
 import json
-from src.views import get_data_from_xlsx, filter_transactions_by_date, greeting, get_cards_data, get_top_5_transactions, \
-    get_exchange_rates, get_stocks_cost
+import os
+
 from dotenv import load_dotenv
+
+from src.views import (filter_transactions_by_date, get_cards_data,
+                       get_data_from_xlsx, get_exchange_rates, get_stocks_cost,
+                       get_top_5_transactions, greeting)
 
 user_choice = {
     "user_currencies": ["USD", "EUR"],
