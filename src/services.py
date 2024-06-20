@@ -24,14 +24,6 @@ def analyze_cashback(transactions: List[Dict], year: int, month: int) -> json:
                     cashback_analysis[category] = cashback
     return json.dumps(cashback_analysis, ensure_ascii=False, indent=4)
 
-data = [
-        {"Дата операции": "15.05.2023 12:34:56", "Категория": "Продукты", "Сумма операции": -1000, "Кэшбэк": 10},
-        {"Дата операции": "15.05.2023 12:34:56", "Категория": "Продукты", "Сумма операции": -2000, "Кэшбэк": None},
-        {"Дата операции": "15.05.2023 12:34:56", "Категория": "Развлечения", "Сумма операции": -500, "Кэшбэк": 5},
-        {"Дата операции": "15.04.2023 12:34:56", "Категория": "Продукты", "Сумма операции": -1000, "Кэшбэк": 10},
-    ]
-result = analyze_cashback(data, 2023, 5)
-print(result)
 
 def investment_bank(transactions: List[Dict], date: str, limit: int) -> int:  # принимает строку с датой гггг.мм
     """Функция принимает транзакции, дату и лимит округления и считает сколько можно было отложить в инвесткопилку"""
@@ -42,11 +34,9 @@ def investment_bank(transactions: List[Dict], date: str, limit: int) -> int:  # 
         if transaction_date.year == user_date.year and transaction_date.month == user_date.month:
             amount = transaction["Сумма операции"]
             if amount < 0 and transaction["Категория"] != "Переводы" and transaction["Категория"] != "Наличные":
-                division = amount / limit
-                rounded_division = int(division)
-                total_amount = rounded_division * limit
-                investment = total_amount - amount
-                sum_investment_bank += investment
+                amount_ = abs(amount) # перевел в положительное
+                total_amount = ((amount_ + limit + 1) // limit) * limit - amount_
+                sum_investment_bank += total_amount
     return sum_investment_bank
 
 
