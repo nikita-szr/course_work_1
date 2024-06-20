@@ -1,17 +1,13 @@
-import pytest
-from unittest.mock import patch
-import pandas as pd
-from src.views import (
-    filter_transactions_by_date,
-    get_cards_data,
-    get_data_from_xlsx,
-    get_exchange_rates,
-    get_stocks_cost,
-    get_top_5_transactions,
-    greeting,
-)
 from datetime import datetime
+from unittest.mock import patch
+
+import pandas as pd
+import pytest
 import requests_mock
+
+from src.views import (filter_transactions_by_date, get_cards_data,
+                       get_data_from_xlsx, get_exchange_rates, get_stocks_cost,
+                       get_top_5_transactions, greeting)
 
 
 def test_get_data_from_xlsx():

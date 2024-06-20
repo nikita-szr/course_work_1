@@ -2,7 +2,6 @@ import logging
 from datetime import datetime, timedelta
 from typing import Dict, List
 
-
 import pandas as pd
 import requests
 
@@ -27,7 +26,7 @@ def get_data_from_xlsx(path: str) -> List[Dict]:
         return []
 
 
-def filter_transactions_by_date(transactions: List[Dict], input_date_str: str) -> List[Dict]:  # дата формата дд.мм.гггг
+def filter_transactions_by_date(transactions: List[Dict], input_date_str: str) -> List[Dict]:  # дата дд.мм.гггг
     """Функция принимает список словарей с транзакциями и дату
     фильтрует транзакции с начала месяца, на который выпадает входящая дата по входящую дату."""
     input_date = datetime.strptime(input_date_str, '%d.%m.%Y')
