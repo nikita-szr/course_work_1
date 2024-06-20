@@ -1,7 +1,7 @@
 import json
-from typing import List, Dict
-from datetime import datetime
 import re
+from datetime import datetime
+from typing import Dict, List
 
 
 def analyze_cashback(transactions: List[Dict], year: int, month: int) -> json:
@@ -25,7 +25,7 @@ def analyze_cashback(transactions: List[Dict], year: int, month: int) -> json:
     return json.dumps(cashback_analysis, ensure_ascii=False, indent=4)
 
 
-def investment_bank(transactions: List[Dict], date: str, limit: int) -> int:  # принимает строку с датой формата гггг.мм
+def investment_bank(transactions: List[Dict], date: str, limit: int) -> int:  # принимает строку с датой гггг.мм
     """Функция принимает транзакции, дату и лимит округления и считает сколько можно было отложить в инвесткопилку"""
     sum_investment_bank = 0
     user_date = datetime.strptime(date, '%Y.%m')
