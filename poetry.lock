@@ -685,6 +685,23 @@ socks = ["PySocks (>=1.5.6,!=1.5.7)"]
 use-chardet-on-py3 = ["chardet (>=3.0.2,<6)"]
 
 [[package]]
+name = "requests-mock"
+version = "1.12.1"
+description = "Mock out responses from the requests package"
+optional = false
+python-versions = ">=3.5"
+files = [
+    {file = "requests-mock-1.12.1.tar.gz", hash = "sha256:e9e12e333b525156e82a3c852f22016b9158220d2f47454de9cae8a77d371401"},
+    {file = "requests_mock-1.12.1-py2.py3-none-any.whl", hash = "sha256:b1e37054004cdd5e56c84454cc7df12b25f90f382159087f4b6915aaeef39563"},
+]
+
+[package.dependencies]
+requests = ">=2.22,<3"
+
+[package.extras]
+fixture = ["fixtures"]
+
+[[package]]
 name = "six"
 version = "1.16.0"
 description = "Python 2 and 3 compatibility utilities"
@@ -753,4 +770,4 @@ test = ["pytest", "pytest-cov"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "6b1de368647251d9802b5b2392bcbd1ac93f09f7a37e972327af50a1f5ed259d"
+content-hash = "b451c8352baf5bd1667130d38c76634ea1c044fd611f1cdaa03a7cc559841601"
