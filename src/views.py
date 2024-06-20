@@ -1,5 +1,5 @@
 import logging
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Dict, List
 
 import pandas as pd
@@ -30,7 +30,7 @@ def filter_transactions_by_date(transactions: List[Dict], input_date_str: str) -
     """Функция принимает список словарей с транзакциями и дату
     фильтрует транзакции с начала месяца, на который выпадает входящая дата по входящую дату."""
     input_date = datetime.strptime(input_date_str, '%d.%m.%Y')
-    end_date = input_date
+    end_date = input_date + timedelta(days=1)
     start_date = datetime(end_date.year, end_date.month, 1)
 
     def parse_date(date_str: str):
