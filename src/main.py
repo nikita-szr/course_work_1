@@ -31,7 +31,6 @@ def main(input_date, user_settings, api_key_currency, api_key_stocks):
         "exchange_rates": exchange_rates,
         "stocks": stocks_cost
     }
-
     return json.dumps(user_data, ensure_ascii=False, indent=4)
 
 
