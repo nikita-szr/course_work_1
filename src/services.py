@@ -39,10 +39,10 @@ def analyze_cashback(transactions: List[Dict], year: int, month: int) -> str:
         logger.error(f'Возникла ошибка {e}')
 
 
-def investment_bank(transactions: List[Dict], date: str, limit: int) -> int:  # принимает строку с датой гггг.мм
+def investment_bank(transactions: List[Dict], date: str, limit: int) -> float:  # принимает строку с датой гггг.мм
     """Функция принимает транзакции, дату и лимит округления и считает сколько можно было отложить в инвесткопилку"""
     try:
-        sum_investment_bank = 0
+        sum_investment_bank = float(0.0)
         user_date = datetime.strptime(date, '%Y.%m')
         for transaction in transactions:
             transaction_date = datetime.strptime(transaction["Дата операции"], '%d.%m.%Y %H:%M:%S')
