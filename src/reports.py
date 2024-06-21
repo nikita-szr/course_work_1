@@ -19,7 +19,7 @@ def spending_by_category(transactions: pd.DataFrame, category: str, date: Option
                                          (transactions['Дата операции'] <= date) &
                                          (transactions['Категория'] == category)]
     grouped_transactions = filtered_transactions.groupby(pd.Grouper(key='Дата операции', freq='ME')).sum()
-    return json.dumps(grouped_transactions, ensure_ascii=False, indent=4)
+    return grouped_transactions.to_dict(orient='records')
 
 
 def spending_by_weekday(transactions: pd.DataFrame, date: Optional[str] = None) -> str:
@@ -37,7 +37,8 @@ def spending_by_weekday(transactions: pd.DataFrame, date: Optional[str] = None) 
     grouped_transactions = filtered_transactions.groupby('День недели')['Сумма операции'].mean()
     weekdays = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье']
     grouped_transactions.index = weekdays
-    return json.dumps(grouped_transactions, ensure_ascii=False, indent=4)
+    result_dict = {day: grouped_transactions.get(day, 0.0) for day in weekdays}
+    return json.dumps(result_dict, ensure_ascii=False, indent=4)
 
 
 def spending_by_workday(transactions: pd.DataFrame, date: Optional[str] = None) -> str:
@@ -56,7 +57,7 @@ def spending_by_workday(transactions: pd.DataFrame, date: Optional[str] = None) 
     filtered_transactions['Тип дня'] = 'Рабочий'
     filtered_transactions.loc[filtered_transactions['День недели'].isin(weekend_days), 'Тип дня'] = 'Выходной'
     grouped_transactions = filtered_transactions.groupby('Тип дня')['Сумма операции'].mean()
-    return json.dumps(grouped_transactions, ensure_ascii=False, indent=4)
+    return json.dumps(grouped_transactions.to_dict(), ensure_ascii=False, indent=4)
 
 
 def report_to_file_default(func):
