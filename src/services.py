@@ -37,9 +37,11 @@ def analyze_cashback(transactions: List[Dict], year: int, month: int) -> str:
     except Exception as e:
         print(f'Возникла ошибка {e}')
         logger.error(f'Возникла ошибка {e}')
+        return ''
 
 
-def investment_bank(transactions: List[Dict], date: str, limit: int) -> float:  # принимает строку с датой гггг.мм
+# принимает строку с датой гггг.мм
+def investment_bank(transactions: List[Dict], date: str, limit: int) -> float | Exception:
     """Функция принимает транзакции, дату и лимит округления и считает сколько можно было отложить в инвесткопилку"""
     try:
         sum_investment_bank = float(0.0)
@@ -57,6 +59,7 @@ def investment_bank(transactions: List[Dict], date: str, limit: int) -> float:  
     except Exception as e:
         print(f'Возникла ошибка {e}')
         logger.error(f'Возникла ошибка {e}')
+        return e
 
 
 def search_transactions_by_user_choice(transactions: List[Dict], search: str) -> str:
@@ -73,6 +76,7 @@ def search_transactions_by_user_choice(transactions: List[Dict], search: str) ->
     except Exception as e:
         print(f'Возникла ошибка {e}')
         logger.error(f'Возникла ошибка {e}')
+        return ''
 
 
 def search_transaction_by_mobile_phone(transactions: List[Dict]) -> str:
@@ -89,6 +93,7 @@ def search_transaction_by_mobile_phone(transactions: List[Dict]) -> str:
     except Exception as e:
         print(f'Возникла ошибка {e}')
         logger.error(f'Возникла ошибка {e}')
+        return ''
 
 
 def find_person_to_person_transactions(transactions: List[Dict]) -> str:
@@ -106,3 +111,4 @@ def find_person_to_person_transactions(transactions: List[Dict]) -> str:
     except Exception as e:
         print(f'Возникла ошибка {e}')
         logger.error(f'Возникла ошибка {e}')
+        return ''

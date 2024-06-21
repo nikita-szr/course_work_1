@@ -16,7 +16,7 @@ logger.addHandler(file_handler)
 
 
 # дата гггг.мм.дд
-def spending_by_category(transactions: pd.DataFrame, category: str, date: Optional[str] = None) -> str:
+def spending_by_category(transactions: pd.DataFrame, category: str, date=None) -> str:
     """Функция возвращает траты по заданной категории за последние три месяца
     (от переданной даты, если дата не передана берет текущую)"""
     try:
@@ -35,9 +35,9 @@ def spending_by_category(transactions: pd.DataFrame, category: str, date: Option
     except Exception as e:
         print(f'Возникла ошибка {e}')
         logger.error(f'Возникла ошибка {e}')
+        return ""
 
-
-def spending_by_weekday(transactions: pd.DataFrame, date: Optional[str] = None) -> str:
+def spending_by_weekday(transactions: pd.DataFrame, date=None) -> str:
     """Функция возвращает средние траты в каждый из дней недели за последние три месяца (от переданной даты)"""
     try:
         transactions['Дата операции'] = pd.to_datetime(transactions['Дата операции'], format='%d.%m.%Y %H:%M:%S')
@@ -59,9 +59,10 @@ def spending_by_weekday(transactions: pd.DataFrame, date: Optional[str] = None) 
     except Exception as e:
         print(f'Возникла ошибка {e}')
         logger.error(f'Возникла ошибка {e}')
+        return ""
 
 
-def spending_by_workday(transactions: pd.DataFrame, date: Optional[str] = None) -> str:
+def spending_by_workday(transactions: pd.DataFrame, date=None) -> str:
     """Функция выводит средние траты в рабочий и в выходной день за последние три месяца (от переданной даты)."""
     try:
         transactions['Дата операции'] = pd.to_datetime(transactions['Дата операции'], format='%d.%m.%Y %H:%M:%S')
@@ -83,7 +84,7 @@ def spending_by_workday(transactions: pd.DataFrame, date: Optional[str] = None) 
     except Exception as e:
         print(f'Возникла ошибка {e}')
         logger.error(f'Возникла ошибка {e}')
-
+        return ""
 
 def report_to_file_default(func):
     """Записывает в файл результат, который возвращает функция, формирующая отчет."""
