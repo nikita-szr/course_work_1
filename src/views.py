@@ -3,9 +3,8 @@ import os
 
 from dotenv import load_dotenv
 
-from src.utils import (filter_transactions_by_date, get_cards_data,
-                       get_data_from_xlsx, get_exchange_rates, get_stocks_cost,
-                       get_top_5_transactions, greeting)
+from src.utils import (filter_transactions_by_date, get_cards_data, get_data_from_xlsx, get_exchange_rates,
+                       get_stocks_cost, get_top_5_transactions, greeting)
 
 user_choice = {
     "user_currencies": ["USD", "EUR"],

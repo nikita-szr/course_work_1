@@ -5,9 +5,8 @@ import pandas as pd
 import pytest
 import requests_mock
 
-from src.utils import (filter_transactions_by_date, get_cards_data,
-                       get_data_from_xlsx, get_exchange_rates, get_stocks_cost,
-                       get_top_5_transactions, greeting)
+from src.utils import (filter_transactions_by_date, get_cards_data, get_data_from_xlsx, get_exchange_rates,
+                       get_stocks_cost, get_top_5_transactions, greeting)
 
 
 def test_get_data_from_xlsx():

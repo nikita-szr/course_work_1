@@ -63,6 +63,7 @@ def spending_by_category(transactions: pd.DataFrame, category: str, date=None) -
         logger.error(f'Возникла ошибка {e}')
         return ""
 
+
 @report_to_file_default
 def spending_by_weekday(transactions: pd.DataFrame, date=None) -> str:
     """Функция возвращает средние траты в каждый из дней недели за последние три месяца (от переданной даты)"""
@@ -113,9 +114,6 @@ def spending_by_workday(transactions: pd.DataFrame, date=None) -> str:
         print(f'Возникла ошибка {e}')
         logger.error(f'Возникла ошибка {e}')
         return ""
-
-
-
 
 
 # спросить у преподов почему в примере функции должны возвращать pd.dataframe,
