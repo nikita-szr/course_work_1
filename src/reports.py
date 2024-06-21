@@ -14,7 +14,34 @@ file_handler.setFormatter(formatter)
 logger.addHandler(file_handler)
 
 
+def report_to_file_default(func):
+    """Записывает в файл результат, который возвращает функция, формирующая отчет."""
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        result = func(*args, **kwargs)
+        with open("function_operation_report.txt", "w") as file:
+            file.write(str(result))
+        logger.info(f'Записан результат работы функции {func}')
+        return result
+    return wrapper
+
+
+def report_to_file(filename="function_operation_report.txt"):
+    """Записывает в переданный файл результат, который возвращает функция, формирующая отчет."""
+    def decorator(func):
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            result = func(*args, **kwargs)
+            with open(filename, "w") as file:
+                file.write(str(result))
+            logger.info(f'Записан результат работы функции {func} в файл {filename}')
+            return result
+        return wrapper
+    return decorator
+
+
 # дата гггг.мм.дд
+@report_to_file_default
 def spending_by_category(transactions: pd.DataFrame, category: str, date=None) -> str:
     """Функция возвращает траты по заданной категории за последние три месяца
     (от переданной даты, если дата не передана берет текущую)"""
@@ -36,7 +63,7 @@ def spending_by_category(transactions: pd.DataFrame, category: str, date=None) -
         logger.error(f'Возникла ошибка {e}')
         return ""
 
-
+@report_to_file_default
 def spending_by_weekday(transactions: pd.DataFrame, date=None) -> str:
     """Функция возвращает средние траты в каждый из дней недели за последние три месяца (от переданной даты)"""
     try:
@@ -62,6 +89,7 @@ def spending_by_weekday(transactions: pd.DataFrame, date=None) -> str:
         return ""
 
 
+@report_to_file_default
 def spending_by_workday(transactions: pd.DataFrame, date=None) -> str:
     """Функция выводит средние траты в рабочий и в выходной день за последние три месяца (от переданной даты)."""
     try:
@@ -87,30 +115,7 @@ def spending_by_workday(transactions: pd.DataFrame, date=None) -> str:
         return ""
 
 
-def report_to_file_default(func):
-    """Записывает в файл результат, который возвращает функция, формирующая отчет."""
-    @functools.wraps(func)
-    def wrapper(*args, **kwargs):
-        result = func(*args, **kwargs)
-        with open("function_operation_report.txt", "w") as file:
-            file.write(str(result))
-        logger.info(f'Записан результат работы функции {func}')
-        return result
-    return wrapper
 
-
-def report_to_file(filename="function_operation_report.txt"):
-    """Записывает в переданный файл результат, который возвращает функция, формирующая отчет."""
-    def decorator(func):
-        @functools.wraps(func)
-        def wrapper(*args, **kwargs):
-            result = func(*args, **kwargs)
-            with open(filename, "w") as file:
-                file.write(str(result))
-            logger.info(f'Записан результат работы функции {func} в файл {filename}')
-            return result
-        return wrapper
-    return decorator
 
 
 # спросить у преподов почему в примере функции должны возвращать pd.dataframe,

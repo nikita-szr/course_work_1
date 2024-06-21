@@ -36,6 +36,6 @@ def main(input_date, user_settings, api_key_currency, api_key_stocks):
     }
     return json.dumps(user_data, ensure_ascii=False, indent=4)
 
-
-result = main(input_date_str, user_choice, api_key_currency, api_key_stocks)
-print(result)
+#
+# result = main(input_date_str, user_choice, api_key_currency, api_key_stocks)
+# print(result)
