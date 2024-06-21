@@ -2,7 +2,6 @@ import functools
 import json
 import logging
 from datetime import datetime, timedelta
-from typing import Optional
 
 import pandas as pd
 
@@ -36,6 +35,7 @@ def spending_by_category(transactions: pd.DataFrame, category: str, date=None) -
         print(f'Возникла ошибка {e}')
         logger.error(f'Возникла ошибка {e}')
         return ""
+
 
 def spending_by_weekday(transactions: pd.DataFrame, date=None) -> str:
     """Функция возвращает средние траты в каждый из дней недели за последние три месяца (от переданной даты)"""
@@ -85,6 +85,7 @@ def spending_by_workday(transactions: pd.DataFrame, date=None) -> str:
         print(f'Возникла ошибка {e}')
         logger.error(f'Возникла ошибка {e}')
         return ""
+
 
 def report_to_file_default(func):
     """Записывает в файл результат, который возвращает функция, формирующая отчет."""
