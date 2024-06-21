@@ -5,9 +5,9 @@ from typing import Dict, List
 import pandas as pd
 import requests
 
-logger = logging.getLogger("views")
+logger = logging.getLogger("utils")
 logger.setLevel(logging.DEBUG)
-file_handler = logging.FileHandler(r'../logs/views.log', mode='w')
+file_handler = logging.FileHandler(r'../logs/utils.log', mode='w')
 file_handler.setLevel(logging.DEBUG)
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 file_handler.setFormatter(formatter)
