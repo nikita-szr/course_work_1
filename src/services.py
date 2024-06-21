@@ -84,7 +84,7 @@ def search_transaction_by_mobile_phone(transactions: List[Dict]) -> str:
             description = transaction.get('Описание', '')
             if mobile_pattern.search(description):
                 found_transactions.append(transaction)
-        logger.info(f'Выполнен поиск по транзакциям с номером телефона')
+        logger.info('Выполнен поиск по транзакциям с номером телефона')
         return json.dumps(found_transactions, ensure_ascii=False, indent=4)
     except Exception as e:
         print(f'Возникла ошибка {e}')
