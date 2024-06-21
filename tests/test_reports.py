@@ -1,9 +1,11 @@
-import unittest
-import pandas as pd
-from datetime import datetime, timedelta
-from src.reports import spending_by_category, spending_by_weekday, spending_by_workday
-import pytest
 import json
+from datetime import datetime
+
+import pandas as pd
+import pytest
+
+from src.reports import (spending_by_category, spending_by_weekday,
+                         spending_by_workday)
 
 
 @pytest.mark.parametrize("category, date, expected_result", [
@@ -62,8 +64,8 @@ def test_spending_by_weekday():
 
 def test_spending_by_workday():
     data = {
-        'Дата операции': ['01.06.2024 12:00:00', '02.06.2024 12:00:00', '15.05.2024 08:30:00', '10.05.2024 15:45:00', '25.04.2024 18:20:00',
-                          '15.04.2024 09:10:00', '16.04.2024 09:10:00'],
+        'Дата операции': ['01.06.2024 12:00:00', '02.06.2024 12:00:00', '15.05.2024 08:30:00', '10.05.2024 15:45:00',
+                          '25.04.2024 18:20:00', '15.04.2024 09:10:00', '16.04.2024 09:10:00'],
         'Сумма операции': [1000, 500, 300, 700, 400, 100, 500]
     }
     transactions = pd.DataFrame(data)

@@ -1,9 +1,10 @@
-import pandas as pd
-from typing import Optional
-from datetime import datetime, timedelta
-import json
 import functools
+import json
 import logging
+from datetime import datetime, timedelta
+from typing import Optional
+
+import pandas as pd
 
 logger = logging.getLogger("reports")
 logger.setLevel(logging.DEBUG)

@@ -1,8 +1,8 @@
 import json
+import logging
 import re
 from datetime import datetime
 from typing import Dict, List
-import logging
 
 logger = logging.getLogger("services")
 logger.setLevel(logging.DEBUG)
