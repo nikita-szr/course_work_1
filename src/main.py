@@ -1,37 +1,22 @@
-import os
-
 import pandas as pd
-from dotenv import load_dotenv
 
+import src.config
 from src.reports import spending_by_category, spending_by_weekday, spending_by_workday
 from src.services import (analyze_cashback, find_person_to_person_transactions, investment_bank,
                           search_transaction_by_mobile_phone, search_transactions_by_user_choice)
-from src.utils import get_data_from_xlsx
-from src.views import main
+from src.views import main, user_choice
 
 # web сервисов
-user_choice = {
-    "user_currencies": ["USD", "EUR"],
-    "user_stocks": ["AAPL", "AMZN", "GOOGL", "MSFT", "TSLA"]
-}
-load_dotenv()
-api_key_currency = os.getenv("API_KEY_CURRENCY")
-api_key_stocks = os.getenv("API_KEY_STOCKS")
-input_date_str = "20.03.2020"
-main_page = main(input_date_str, user_choice, api_key_currency, api_key_stocks)
+main_page = main(src.config.input_date_str, user_choice, src.config.api_key_currency, src.config.api_key_stocks)
+print(main_page)
 
 # сервисы
-transactions = get_data_from_xlsx(r'../data/operations.xls')
-year = 2020
-month = 5
-date = "2020.05"
-limit = 50
-search = "Перевод"
-cashback_analysis_result = analyze_cashback(transactions, year, month)
-investment_bank_result = investment_bank(transactions, date, limit)
-search_transactions_by_user_choice_result = search_transactions_by_user_choice(transactions, search)
-search_transaction_by_mobile_phone_result = search_transaction_by_mobile_phone(transactions)
-find_person_to_person_transactions_result = find_person_to_person_transactions(transactions)
+cashback_analysis_result = analyze_cashback(src.config.transactions, src.config.year, src.config.month)
+investment_bank_result = investment_bank(src.config.transactions, src.config.date, src.config.limit)
+search_transactions_by_user_choice_result = search_transactions_by_user_choice(src.config.transactions,
+                                                                               src.config.search)
+search_transaction_by_mobile_phone_result = search_transaction_by_mobile_phone(src.config.transactions)
+find_person_to_person_transactions_result = find_person_to_person_transactions(src.config.transactions)
 print(cashback_analysis_result)
 print(investment_bank_result)
 print(search_transactions_by_user_choice_result)

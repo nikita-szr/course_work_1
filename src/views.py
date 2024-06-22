@@ -6,10 +6,8 @@ from dotenv import load_dotenv
 from src.utils import (filter_transactions_by_date, get_cards_data, get_data_from_xlsx, get_exchange_rates,
                        get_stocks_cost, get_top_5_transactions, greeting)
 
-user_choice = {
-    "user_currencies": ["USD", "EUR"],
-    "user_stocks": ["AAPL", "AMZN", "GOOGL", "MSFT", "TSLA"]
-}
+with open('../user_settings.json', 'r') as file:
+    user_choice = json.load(file)
 load_dotenv()
 api_key_currency = os.getenv("API_KEY_CURRENCY")
 api_key_stocks = os.getenv("API_KEY_STOCKS")
@@ -34,7 +32,3 @@ def main(input_date, user_settings, api_key_currency, api_key_stocks):
         "stocks": stocks_cost
     }
     return json.dumps(user_data, ensure_ascii=False, indent=4)
-
-#
-# result = main(input_date_str, user_choice, api_key_currency, api_key_stocks)
-# print(result)
