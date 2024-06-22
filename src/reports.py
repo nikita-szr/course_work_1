@@ -114,7 +114,3 @@ def spending_by_workday(transactions: pd.DataFrame, date=None) -> str:
         print(f'Возникла ошибка {e}')
         logger.error(f'Возникла ошибка {e}')
         return ""
-
-
-# спросить у преподов почему в примере функции должны возвращать pd.dataframe,
-# а в критериях оценки показано что возвращать надо json
