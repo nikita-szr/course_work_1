@@ -3,28 +3,55 @@ from datetime import datetime
 
 import pandas as pd
 import pytest
-
+from unittest.mock import patch
 from src.reports import spending_by_category, spending_by_weekday, spending_by_workday
 
 
-@pytest.mark.parametrize("category, date, expected_result", [
-    ('Еда', None, [{'Категория': 'Еда', 'Сумма': 700},
-                   {'Категория': 'Еда', 'Сумма': 500},
-                   {'Категория': 'Еда', 'Сумма': 1000}]),
-    ('Еда', '2024.06.15', [{'Категория': 'Еда', 'Сумма': 700},
-                           {'Категория': 'Еда', 'Сумма': 500},
-                           {'Категория': 'Еда', 'Сумма': 1000}])
-])
-def test_spending_by_category(category, date, expected_result):
-    data = {
-        'Дата операции': ['01.06.2024 12:00:00', '15.05.2024 08:30:00', '10.05.2024 15:45:00', '25.04.2024 18:20:00',
-                          '15.04.2024 09:10:00'],
-        'Категория': ['Еда', 'Еда', 'Транспорт', 'Еда', 'Транспорт'],
-        'Сумма': [1000, 500, 300, 700, 400]
+def test_spending_by_category():
+    transactions_data = {
+        'Дата операции': ['01.06.2024 12:00:00', '02.06.2024 12:00:00', '15.05.2024 08:30:00', '10.05.2024 15:45:00'],
+        'Категория': ['Еда', 'Транспорт', 'Еда', 'Транспорт'],
+        'Сумма': [100, 50, 80, 70]
     }
-    transactions = pd.DataFrame(data)
-    result = spending_by_category(transactions, category, date)
-    assert result == expected_result
+    transactions_df = pd.DataFrame(transactions_data)
+
+    expected_result_1 = ('[\n'
+ '    {\n'
+ '        "Дата операции": "02.06.2024 12:00:00",\n'
+ '        "Категория": "Транспорт",\n'
+ '        "Сумма": 50\n'
+ '    },\n'
+ '    {\n'
+ '        "Дата операции": "10.05.2024 15:45:00",\n'
+ '        "Категория": "Транспорт",\n'
+ '        "Сумма": 70\n'
+ '    }\n'
+ ']')
+
+    expected_result = ('[\n'
+ '    {\n'
+ '        "Дата операции": "01.06.2024 12:00:00",\n'
+ '        "Категория": "Еда",\n'
+ '        "Сумма": 100\n'
+ '    },\n'
+ '    {\n'
+ '        "Дата операции": "15.05.2024 08:30:00",\n'
+ '        "Категория": "Еда",\n'
+ '        "Сумма": 80\n'
+ '    }\n'
+ ']')
+
+    # Тест с передачей даты
+    result = spending_by_category(transactions_df, 'Еда', '2024.06.30')
+    assert result.strip() == expected_result.strip()
+
+    # Тест без передачи даты
+    result = spending_by_category(transactions_df, 'Транспорт')
+    assert result.strip() == expected_result_1.strip()
+
+    # Тест с некорректной категорией
+    result = spending_by_category(transactions_df, 'Несуществующая категория')
+    assert result == '[]'
 
 
 def test_spending_by_weekday():

@@ -55,9 +55,14 @@ def spending_by_category(transactions: pd.DataFrame, category: str, date=None) -
         filtered_transactions = transactions[(transactions['Дата операции'] >= start_date) &
                                              (transactions['Дата операции'] <= date) &
                                              (transactions['Категория'] == category)]
-        grouped_transactions = filtered_transactions.groupby(pd.Grouper(key='Дата операции', freq='ME')).sum()
+        # grouped_transactions = filtered_transactions.groupby(pd.Grouper(key='Дата операции', freq='ME')).sum()
+        result = filtered_transactions.to_dict(orient='records')
+        for record in result:
+            record['Дата операции'] = record['Дата операции'].strftime('%d.%m.%Y %H:%M:%S')
+        formatted_result = json.dumps(result, ensure_ascii=False, indent=4)
         logger.info(f'Траты за последние три месяца от {date} по категории {category}')
-        return grouped_transactions.to_dict(orient='records')
+        # return grouped_transactions.to_dict(orient='records')
+        return formatted_result
     except Exception as e:
         print(f'Возникла ошибка {e}')
         logger.error(f'Возникла ошибка {e}')
